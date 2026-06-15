@@ -1,7 +1,6 @@
 # Minecraft Bedrock Server on Termux (without proot)
 
 [![Español](https://img.shields.io/badge/lang-es-yellow)](README.es.md)
-[![English](https://img.shields.io/badge/lang-en-blue)](README.md)
 
 Step-by-step guide to run the official Minecraft Bedrock Dedicated Server (BDS) on Termux **without proot-distro**, using native Termux + glibc + Box64.
 

@@ -4,49 +4,49 @@
 
 Guía paso a paso para ejecutar el servidor oficial de Minecraft Bedrock (BDS) en Termux **sin usar proot-distro**, solo con Termux nativo + glibc + Box64.
 
-## Requirements
+## Requisitos
 
-- Android device with **ARM64** architecture (aarch64)
-- **4 GB+ RAM** (6 GB+ recommended)
-- **2 GB+ free storage**
-- Android 10 or higher
-- Termux installed from **F-Droid** (Play Store version is outdated)
+- Dispositivo Android con arquitectura **ARM64** (aarch64)
+- **4 GB+ de RAM** (recomendado 6 GB+)
+- **2 GB+ de espacio libre**
+- Android 10 o superior
+- Termux instalado desde **F-Droid** (la versión de Play Store está desactualizada)
 
-## Installation
+## Instalación
 
-### 1. Prepare Termux
+### 1. Preparar Termux
 
 ```bash
 pkg update && pkg upgrade -y
 pkg install wget curl unzip nano -y
 ```
 
-### 2. Install glibc repository
+### 2. Instalar repositorio glibc
 
 ```bash
 pkg install glibc-repo glibc-runner -y
 ```
 
-This enables running Linux (glibc) binaries directly in Termux.
+Esto permite ejecutar binarios de Linux (glibc) directamente en Termux.
 
-### 3. Compile and install Box64
+### 3. Compilar e instalar Box64
 
-Box64 translates x86_64 binaries to ARM64. The official Bedrock server is x86_64.
+Box64 traduce binarios x86_64 a ARM64. El servidor oficial de Bedrock es x86_64.
 
 ```bash
-# Build dependencies
+# Dependencias de compilación
 pkg install git cmake-glibc make-glibc python-glibc -y
 
-# Clone Box64
+# Clonar Box64
 cd ~
 git clone https://github.com/ptitSeb/box64
 cd box64
 
-# Patch paths for Termux glibc
+# Parchear rutas para Termux glibc
 sed -i 's|/usr|/data/data/com.termux/files/usr/glibc|g' CMakeLists.txt
 sed -i 's|/etc|/data/data/com.termux/files/usr/glibc/etc|g' CMakeLists.txt
 
-# Build
+# Compilar
 mkdir build && cd build
 cmake --install-prefix $PREFIX/glibc .. \
   -DARM_DYNAREC=1 \
@@ -57,48 +57,48 @@ make -j$(nproc)
 make install
 ```
 
-Verify Box64 installation:
+Verifica que Box64 se instaló:
 
 ```bash
 box64 --version
 ```
 
-### 4. Download the official Minecraft Bedrock Server
+### 4. Descargar el servidor oficial de Minecraft Bedrock
 
-Go to the [official Minecraft Bedrock Server page](https://www.minecraft.net/en-us/download/server/bedrock) and copy the Linux download link, or use:
+Ve a la [página oficial de Minecraft Bedrock Server](https://www.minecraft.net/en-us/download/server/bedrock) y copia el enlace de descarga para Linux, o usa:
 
 ```bash
 cd ~
 mkdir bedrock-server && cd bedrock-server
 
-# Download latest version (replace URL with current)
+# Descargar la última versión (reemplaza la URL con la actual)
 wget https://minecraft.azureedge.net/bin-linux/bedrock-server-1.21.73.02.zip
 
-# If the link changes, download manually from:
+# Si el enlace cambia, descarga manualmente desde:
 # https://www.minecraft.net/en-us/download/server/bedrock
 ```
 
-Extract:
+Extraer:
 
 ```bash
 unzip bedrock-server-*.zip
 rm bedrock-server-*.zip
 ```
 
-### 5. Configure the server
+### 5. Configurar el servidor
 
-Edit `server.properties`:
+Edita `server.properties`:
 
 ```bash
 nano server.properties
 ```
 
-Recommended settings for Android:
+Ajustes recomendados para Android:
 
 ```properties
 server-port=19132
 server-portv6=19133
-server-name=Bedrock Android Server
+server-name=Servidor Bedrock Android
 gamemode=survival
 difficulty=normal
 max-players=10
@@ -107,13 +107,13 @@ tick-distance=4
 correct-player-movement=false
 ```
 
-### 6. Create startup script
+### 6. Crear script de inicio
 
 ```bash
 nano start.sh
 ```
 
-Content:
+Contenido:
 
 ```bash
 #!/data/data/com.termux/files/usr/bin/bash
@@ -125,59 +125,59 @@ cd "$(dirname "$0")"
 box64 ./bedrock_server
 ```
 
-Make it executable:
+Dar permisos:
 
 ```bash
 chmod +x start.sh
 ```
 
-### 7. Start the server
+### 7. Iniciar el servidor
 
 ```bash
 ./start.sh
 ```
 
-## Connecting to the server
+## Conectarse al servidor
 
-### Local network
+### Red local
 
-Get your device's local IP:
+La IP local del dispositivo se obtiene con:
 
 ```bash
 ip addr show wlan0 | grep "inet "
 ```
 
-In Minecraft Bedrock → **Servers → Add Server** → local IP + port `19132`.
+En Minecraft Bedrock → **Servidores → Añadir servidor** → IP local + puerto `19132`.
 
-### Internet (with Playit.gg)
+### Internet (con Playit.gg)
 
-Playit.gg creates a tunnel without opening ports.
+Playit.gg crea un túnel sin necesidad de abrir puertos.
 
 ```bash
-# Download Playit
+# Descargar Playit
 curl -SsL https://playit.gg/download -o playit
 chmod +x playit
 
-# Run to link
+# Ejecutar para vincular
 ./playit
 ```
 
-Follow the instructions to link your tunnel to port `19132`.
+Sigue las instrucciones para vincular tu túnel al puerto `19132`.
 
-## Quick setup script
+## Script de arranque rápido
 
-Save as `setup-bedrock.sh`:
+Guarda esto como `setup-bedrock.sh`:
 
 ```bash
 #!/data/data/com.termux/files/usr/bin/bash
 set -e
 
-echo "[1/5] Updating Termux..."
+echo "[1/5] Actualizando Termux..."
 pkg update && pkg upgrade -y
 pkg install wget curl unzip nano git cmake-glibc make-glibc python-glibc -y
 pkg install glibc-repo glibc-runner -y
 
-echo "[2/5] Compiling Box64..."
+echo "[2/5] Compilando Box64..."
 cd ~
 [ -d box64 ] || git clone https://github.com/ptitSeb/box64
 cd box64
@@ -188,14 +188,14 @@ cmake --install-prefix $PREFIX/glibc .. -DARM_DYNAREC=1 -DCMAKE_BUILD_TYPE=RelWi
 make -j$(nproc)
 make install
 
-echo "[3/5] Downloading Bedrock Server..."
+echo "[3/5] Descargando Bedrock Server..."
 cd ~
 mkdir -p bedrock-server && cd bedrock-server
 wget https://minecraft.azureedge.net/bin-linux/bedrock-server-1.21.73.02.zip
 unzip bedrock-server-*.zip
 rm bedrock-server-*.zip
 
-echo "[4/5] Creating startup script..."
+echo "[4/5] Creando script de inicio..."
 cat > start.sh << 'EOF'
 #!/data/data/com.termux/files/usr/bin/bash
 export GLIBC_PREFIX=/data/data/com.termux/files/usr/glibc
@@ -207,24 +207,24 @@ box64 ./bedrock_server
 EOF
 chmod +x start.sh
 
-echo "[5/5] Installation complete."
-echo "To start: cd ~/bedrock-server && ./start.sh"
+echo "[5/5] Instalación completa."
+echo "Para iniciar: cd ~/bedrock-server && ./start.sh"
 ```
 
-## Important notes
+## Notas importantes
 
-- **Performance:** Box64 adds overhead. Expect 5-15 players depending on RAM.
-- **Keep running in background:** Use `tmux` to keep the server running after closing Termux:
+- **Rendimiento:** Box64 añade overhead. Espera entre 5-15 jugadores según la RAM.
+- **Mantener en segundo plano:** Usa `tmux` para mantener el servidor corriendo al cerrar Termux:
   ```bash
   pkg install tmux -y
   tmux new -s minecraft
   ./start.sh
-  # Ctrl+B then D to detach
-  # tmux attach -t minecraft to reattach
+  # Ctrl+B luego D para desconectarte
+  # tmux attach -t minecraft para volver
   ```
-- **Update server:** Download the new version, extract over the existing folder (don't delete `worlds/`).
-- **Random crashes:** Box64 + BDS can be unstable on Android. Reduce `view-distance` and `tick-distance` if crashes occur.
+- **Actualizar servidor:** Descarga la nueva versión, extrae sobre la carpeta existente (sin borrar `worlds/`).
+- **Crash aleatorio:** Box64 + BDS puede ser inestable en Android. Reduce `view-distance` y `tick-distance` si hay crashes.
 
-## License
+## Licencia
 
 MIT
