@@ -14,8 +14,7 @@ echo ""
 echo "[1/5] Actualizando Termux..."
 pkg update -y
 pkg upgrade -y
-pkg install wget curl unzip nano git jq cmake-glibc make-glibc python-glibc -y
-pkg install glibc-repo glibc-runner -y
+pkg install wget curl unzip nano git jq cmake make glibc-repo glibc-runner -y
 echo "  OK"
 echo ""
 

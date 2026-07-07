@@ -35,7 +35,7 @@ Box64 translates x86_64 binaries to ARM64. The official Bedrock server is x86_64
 
 ```bash
 # Build dependencies
-pkg install git cmake-glibc make-glibc python-glibc -y
+pkg install git cmake make -y
 
 # Clone Box64
 cd ~
@@ -173,7 +173,7 @@ set -e
 
 echo "[1/5] Updating Termux..."
 pkg update && pkg upgrade -y
-pkg install wget curl unzip nano git jq cmake-glibc make-glibc python-glibc -y
+pkg install wget curl unzip nano git jq cmake make -y
 pkg install glibc-repo glibc-runner -y
 
 echo "[2/5] Compiling Box64..."
