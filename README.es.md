@@ -25,7 +25,6 @@ pkg install wget curl unzip nano jq -y
 
 ```bash
 pkg install glibc-repo -y
-pkg install glibc-runner -y
 ```
 
 Esto permite ejecutar binarios de Linux (glibc) directamente en Termux.
@@ -176,8 +175,6 @@ echo "[1/5] Actualizando Termux..."
 pkg update && pkg upgrade -y
 pkg install wget curl unzip nano git jq cmake make -y
 pkg install glibc-repo -y
-pkg install glibc-runner -y
-
 echo "[2/5] Compilando Box64..."
 cd ~
 [ -d box64 ] || git clone https://github.com/ptitSeb/box64
