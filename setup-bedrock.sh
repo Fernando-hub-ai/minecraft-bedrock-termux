@@ -1,7 +1,7 @@
 #!/data/data/com.termux/files/usr/bin/bash
 set -e
 
-BEDROCK_URL="https://minecraft.azureedge.net/bin-linux/bedrock-server-1.21.73.02.zip"
+API_URL="https://net-secondary.web.minecraft-services.net/api/v1.0/download/links"
 INSTALL_DIR="$HOME/bedrock-server"
 
 echo "========================================"
@@ -14,7 +14,7 @@ echo ""
 echo "[1/5] Actualizando Termux..."
 pkg update -y
 pkg upgrade -y
-pkg install wget curl unzip nano git cmake-glibc make-glibc python-glibc -y
+pkg install wget curl unzip nano git jq cmake-glibc make-glibc python-glibc -y
 pkg install glibc-repo glibc-runner -y
 echo "  OK"
 echo ""
@@ -45,10 +45,22 @@ echo ""
 
 # --- 3. Descargar Bedrock Server ---
 echo "[3/5] Descargando Bedrock Server..."
+echo "  Consultando API para obtener última versión..."
+DATA=$(curl -fsSL "$API_URL")
+BEDROCK_URL=$(echo "$DATA" | jq -r '.result.links[] | select(.downloadType == "serverBedrockLinux") | .downloadUrl')
+BEDROCK_VERSION=$(echo "$BEDROCK_URL" | grep -oP '\d+\.\d+\.\d+\.\d+' | head -1)
+
+if [ -z "$BEDROCK_URL" ] || [ "$BEDROCK_URL" = "null" ]; then
+  echo "[ERROR] No se pudo obtener la URL de descarga."
+  echo "  Revisa: $API_URL"
+  exit 1
+fi
+
 rm -rf "$INSTALL_DIR"
 mkdir -p "$INSTALL_DIR"
 cd "$INSTALL_DIR"
-echo "  Descargando desde: $BEDROCK_URL"
+echo "  Versión: $BEDROCK_VERSION"
+echo "  Descargando..."
 wget "$BEDROCK_URL" -O bedrock-server.zip
 unzip -q bedrock-server.zip
 rm bedrock-server.zip

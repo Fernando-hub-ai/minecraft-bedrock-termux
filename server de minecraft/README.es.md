@@ -18,7 +18,7 @@ Guía paso a paso para ejecutar el servidor oficial de Minecraft Bedrock (BDS) e
 
 ```bash
 pkg update && pkg upgrade -y
-pkg install wget curl unzip nano jq -y
+pkg install wget curl unzip nano -y
 ```
 
 ### 2. Instalar repositorio glibc
@@ -65,23 +65,24 @@ box64 --version
 
 ### 4. Descargar el servidor oficial de Minecraft Bedrock
 
-Usa la API de Mojang para obtener el enlace de la última versión:
+Ve a la [página oficial de Minecraft Bedrock Server](https://www.minecraft.net/en-us/download/server/bedrock) y copia el enlace de descarga para Linux, o usa:
 
 ```bash
 cd ~
 mkdir bedrock-server && cd bedrock-server
 
-# Obtener URL de descarga desde la API de Mojang
-curl -fsSL https://net-secondary.web.minecraft-services.net/api/v1.0/download/links \
-  | jq -r '.result.links[] | select(.downloadType == "serverBedrockLinux") | .downloadUrl' \
-  | xargs wget -O bedrock-server.zip
+# Descargar la última versión (reemplaza la URL con la actual)
+wget https://minecraft.azureedge.net/bin-linux/bedrock-server-1.21.73.02.zip
+
+# Si el enlace cambia, descarga manualmente desde:
+# https://www.minecraft.net/en-us/download/server/bedrock
 ```
 
 Extraer:
 
 ```bash
-unzip -q bedrock-server.zip
-rm bedrock-server.zip
+unzip bedrock-server-*.zip
+rm bedrock-server-*.zip
 ```
 
 ### 5. Configurar el servidor
@@ -173,7 +174,7 @@ set -e
 
 echo "[1/5] Actualizando Termux..."
 pkg update && pkg upgrade -y
-pkg install wget curl unzip nano git jq cmake-glibc make-glibc python-glibc -y
+pkg install wget curl unzip nano git cmake-glibc make-glibc python-glibc -y
 pkg install glibc-repo glibc-runner -y
 
 echo "[2/5] Compilando Box64..."
@@ -190,11 +191,9 @@ make install
 echo "[3/5] Descargando Bedrock Server..."
 cd ~
 mkdir -p bedrock-server && cd bedrock-server
-curl -fsSL https://net-secondary.web.minecraft-services.net/api/v1.0/download/links \
-  | jq -r '.result.links[] | select(.downloadType == "serverBedrockLinux") | .downloadUrl' \
-  | xargs wget -O bedrock-server.zip
-unzip -q bedrock-server.zip
-rm bedrock-server.zip
+wget https://minecraft.azureedge.net/bin-linux/bedrock-server-1.21.73.02.zip
+unzip bedrock-server-*.zip
+rm bedrock-server-*.zip
 
 echo "[4/5] Creando script de inicio..."
 cat > start.sh << 'EOF'
