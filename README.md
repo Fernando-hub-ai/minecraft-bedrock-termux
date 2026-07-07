@@ -24,7 +24,8 @@ pkg install wget curl unzip nano jq -y
 ### 2. Install glibc repository
 
 ```bash
-pkg install glibc-repo glibc-runner -y
+pkg install glibc-repo -y
+pkg install glibc-runner -y
 ```
 
 This enables running Linux (glibc) binaries directly in Termux.
@@ -174,7 +175,8 @@ set -e
 echo "[1/5] Updating Termux..."
 pkg update && pkg upgrade -y
 pkg install wget curl unzip nano git jq cmake make -y
-pkg install glibc-repo glibc-runner -y
+pkg install glibc-repo -y
+pkg install glibc-runner -y
 
 echo "[2/5] Compiling Box64..."
 cd ~

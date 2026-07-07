@@ -14,7 +14,12 @@ echo ""
 echo "[1/5] Actualizando Termux..."
 pkg update -y
 pkg upgrade -y
-pkg install wget curl unzip nano git jq cmake make glibc-repo glibc-runner -y
+pkg install wget curl unzip nano git jq cmake make -y
+
+# glibc-repo habilita el repositorio glibc (debe instalarse solo primero)
+pkg install glibc-repo -y
+# glibc-runner está en el repo glibc, por eso va en un paso aparte
+pkg install glibc-runner -y || echo "  (glibc-runner opcional, se usará ld.so manualmente)"
 echo "  OK"
 echo ""
 
